@@ -149,20 +149,16 @@ export default {
 
     async getNotes() {
       var resp = await fetch('http://localhost:5004/note/get')
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        data.forEach(note => {
-          note.flat = false;
-          note.sharp = false;
-          this.notes.push(note)
-        })
+      let data = await resp.json();
 
-        this.addAccidental(data, '#')
-        this.addAccidental(data, 'b')
-      });
-      console.log(resp);
+      data.forEach(note => {
+        note.flat = false;
+        note.sharp = false;
+        this.notes.push(note)
+      })
+
+      this.addAccidental(data, '#')
+      this.addAccidental(data, 'b')
     },
 
     addAccidental(notes, symbol) {
