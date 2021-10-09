@@ -81,7 +81,13 @@
 
       <b-row class="justify-content-md-center mt-3 mb-3">
         <b-col sm="6">
-          <b-button style="width: 100%" :disabled="generalState() == false || nameState() == false" variant="outline-primary">Create</b-button>
+          <b-button style="width: 100%"
+                    :disabled="generalState() == false || nameState() == false"
+                    variant="outline-primary"
+                    @click="createEtude"
+                    >
+                    Create
+          </b-button>
         </b-col>
         <b-col sm="6">
           <button style="width: 100%"
@@ -126,9 +132,25 @@ export default {
     }
   },
   created() {
-    this.getNotes()
+    this.getNotes();
   },
   methods: {
+    async createEtude() {
+      let resp = await fetch('http://localhost:5004/etude/create',
+                             {method: 'PUT',
+                             headers: {
+                                  'Accept': 'application/json, text/plain',
+                                  'Content-Type': 'application/json;charset=UTF-8'
+                              },
+                             body: JSON.stringify({ name: this.name,
+                                                     min_tempo: this.minTempo,
+                                                     max_tempo: this.maxTempo,
+                                                     current_tempo: this.currentTempo,
+                                                     notes: this.selectedNotes
+                                                   })})
+      console.log(resp);
+    },
+
     openInfo() {
       let elem = document.getElementById('collapseeExample');
 
@@ -148,7 +170,7 @@ export default {
     },
 
     async getNotes() {
-      var resp = await fetch('http://localhost:5004/note/get')
+      let resp = await fetch('http://localhost:5004/note/get')
       let data = await resp.json();
 
       data.forEach(note => {
