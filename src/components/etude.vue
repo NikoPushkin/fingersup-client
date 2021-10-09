@@ -113,6 +113,9 @@
 </template>
 
 <script>
+
+import { environment } from '../environment';
+
 export default {
   name: 'Etude',
   props: {
@@ -136,7 +139,7 @@ export default {
   },
   methods: {
     async createEtude() {
-      let resp = await fetch('http://localhost:5004/etude/create',
+      let resp = await fetch(environment.url + 'etude/create',
                              {method: 'PUT',
                              headers: {
                                   'Accept': 'application/json, text/plain',
@@ -170,7 +173,7 @@ export default {
     },
 
     async getNotes() {
-      let resp = await fetch('http://localhost:5004/note/get')
+      let resp = await fetch(environment.url + 'note/get')
       let data = await resp.json();
 
       data.forEach(note => {
@@ -211,7 +214,7 @@ export default {
     },
     addNote(note) {
       let newNote = {name: note.name,
-                     'note_id': note.note_id,
+                     note_id: note.note_id,
                      num: this.selectedNotes.length,
                      flat: note.flat,
                      sharp: note.sharp}
