@@ -27,6 +27,11 @@ const routes = [
     path: '/etude/update',
     name: 'EtudeUpdate',
     component: () => import('../views/Update.vue')
+  },
+  {
+    path: '/etude/collection',
+    name: 'Collection',
+    component: () => import('../views/EtudeList.vue')
   }
 ]
 
