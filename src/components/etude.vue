@@ -181,34 +181,7 @@ export default {
         note.sharp = false;
         this.notes.push(note)
       })
-
-      this.addAccidental(data, '#')
-      this.addAccidental(data, 'b')
     },
-
-    addAccidental(notes, symbol) {
-      let noAccidentalNotes = { '#': ['E', 'B'],
-                                'b': ['F', 'C'] };
-
-      notes.map(note => {
-        if (!noAccidentalNotes[symbol].includes(note.name)) {
-          let newNote;
-          if (symbol == '#') {
-            newNote = { 'name': note.name + symbol,
-                        'note_id': note.note_id,
-                        'sharp': true,
-                        'flat': false };
-          } else if (symbol == 'b') {
-            newNote = { 'name': note.name + symbol,
-                        'note_id': note.note_id,
-                        'sharp': false,
-                        'flat': true };
-          }
-          this.notes.push(newNote);
-        }
-      })
-    },
-
     deleteNote(note) {
       this.selectedNotes = this.selectedNotes.filter((item) => {return item !== note})
     },
