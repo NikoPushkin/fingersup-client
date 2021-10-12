@@ -35,13 +35,27 @@
                         v-for="note in etude.notes"
                         :key="note.num"
                         >
-                {{ note }}
+                {{ note.name }}
               </b-button>
             </div>
           </b-card-text>
 
           <div class="edit-buttons">
-            <b-button variant="light">Edit</b-button>
+            <b-button variant="light">
+              <router-link :to="{path: '/etude/update',
+                                 query: {
+                                   updateQuery: {
+                                     minTempo: etude.tempo_min,
+                                     maxTempo: etude.tempo_max,
+                                     currentTempo: etude.tempo_current,
+                                     name: etude.name,
+                                     notes: etude.notes
+                                   }
+                                  }
+                                }"
+              >Edit
+              </router-link>
+            </b-button>
             <b-button variant="danger" @click="deleteEtude(etude.etude_id, etude.name)">Delete</b-button>
           </div>
 
