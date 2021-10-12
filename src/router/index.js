@@ -26,7 +26,10 @@ const routes = [
   {
     path: '/etude/update',
     name: 'EtudeUpdate',
-    component: () => import('../views/Update.vue')
+    component: () => import('../views/Update.vue'),
+    props(route) {
+      return {  myprop: route.query.updateQuery }
+    }
   },
   {
     path: '/etude/collection',
