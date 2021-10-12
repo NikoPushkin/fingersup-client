@@ -11,7 +11,19 @@
       </b-card-header>
 
       <b-collapse :id="'etude-' + index" accordion="my-accordion" role="tabpanel">
-        <b-card-body>
+        <b-card-body v-if="deletedEtude">
+
+        <b-alert show variant="info"
+          >
+          Etude <b>{{ deletedEtude }}</b> removed
+          <div class="">
+            <b-button variant="info" @click="cleareDeletedEtude">Ok</b-button>
+          </div>
+        </b-alert>
+
+        </b-card-body>
+
+        <b-card-body v-else>
           <b-card-text>Min tempo: <code>{{ etude.tempo_min }}</code></b-card-text>
           <b-card-text>Current tempo: <code>{{ etude.tempo_current }}</code></b-card-text>
           <b-card-text>Max tempo: <code>{{ etude.tempo_max }}</code></b-card-text>
@@ -27,6 +39,12 @@
               </b-button>
             </div>
           </b-card-text>
+
+          <div class="edit-buttons">
+            <b-button variant="light">Edit</b-button>
+            <b-button variant="danger" @click="deleteEtude(etude.etude_id, etude.name)">Delete</b-button>
+          </div>
+
         </b-card-body>
       </b-collapse>
 
@@ -43,6 +61,7 @@ export default {
   data() {
     return {
       etudeList: [],
+      deletedEtude: ''
     }
   },
   created() {
@@ -52,7 +71,19 @@ export default {
     async getEtudeCollection() {
       let resp = await fetch(environment.url + 'etude/full');
       this.etudeList = await resp.json();
-      console.log(this.etudeList);
+    },
+    async deleteEtude(id, name) {
+      let resp = await fetch(environment.url + 'etude/delete/' + id, {
+                              method: 'DELETE'
+                            });
+      let data = await resp.json();
+      if (data.length) {
+        this.deletedEtude = name;
+      }
+    },
+    cleareDeletedEtude() {
+      this.deletedEtude = '';
+      this.getEtudeCollection();
     },
 
     openEtudeInfo(index) {
@@ -64,5 +95,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.edit-buttons {
+  display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
 
 </style>
