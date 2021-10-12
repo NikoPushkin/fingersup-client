@@ -146,9 +146,9 @@ export default {
                                   'Content-Type': 'application/json;charset=UTF-8'
                               },
                              body: JSON.stringify({ name: this.name,
-                                                     min_tempo: this.minTempo,
-                                                     max_tempo: this.maxTempo,
-                                                     current_tempo: this.currentTempo,
+                                                     min_tempo: Number(this.minTempo),
+                                                     max_tempo: Number(this.maxTempo),
+                                                     current_tempo: Number(this.currentTempo),
                                                      notes: this.selectedNotes
                                                    })})
       console.log(resp);
