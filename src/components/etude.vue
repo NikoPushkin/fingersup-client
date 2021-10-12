@@ -84,16 +84,32 @@
           <b-button style="width: 100%"
                     :disabled="generalState() == false || nameState() == false"
                     variant="outline-primary"
-                    @click="createEtude"
+                    @click="createUpdateEtude('PUT')"
+                    v-if="msg == 'create'"
                     >
                     Create
+          </b-button>
+          <b-button style="width: 100%"
+                    :disabled="generalState() == false || nameState() == false"
+                    variant="outline-primary"
+                    @click="createUpdateEtude('POST')"
+                    v-else
+                    >
+                    Save
           </b-button>
         </b-col>
         <b-col sm="6">
           <button style="width: 100%"
               class="btn btn-info"
               @click="openInfo"
+              v-if="msg == 'create'"
               >Info
+          </button>
+          <button style="width: 100%"
+              class="btn btn-light"
+              v-else
+              >
+              <router-link to="/etude/collection">Cancel</router-link>
           </button>
         </b-col>
       </b-row>
@@ -119,7 +135,10 @@ import { environment } from '../environment';
 export default {
   name: 'Etude',
   props: {
-    msg: String
+    msg: {
+      type: String,
+      default: 'update'
+    },
   },
   data() {
     return {
@@ -136,11 +155,24 @@ export default {
   },
   created() {
     this.getNotes();
+
+    if (this.$route.query.updateQuery){
+      let etude = this.$route.query.updateQuery;
+      this.minTempo = etude.minTempo
+      this.maxTempo = etude.maxTempo
+      this.currentTempo = etude.currentTempo
+      this.name = etude.name
+      this.selectedNotes = etude.notes
+    }
   },
   methods: {
-    async createEtude() {
-      let resp = await fetch(environment.url + 'etude/create',
-                             {method: 'PUT',
+    async createUpdateEtude(method) {
+      let route = 'etude/create'
+      if (method == 'POST') {
+        route = 'etude/update'
+      }
+      let resp = await fetch(environment.url + route,
+                             {method: method,
                              headers: {
                                   'Accept': 'application/json, text/plain',
                                   'Content-Type': 'application/json;charset=UTF-8'
@@ -177,8 +209,6 @@ export default {
       let data = await resp.json();
 
       data.forEach(note => {
-        note.flat = false;
-        note.sharp = false;
         this.notes.push(note)
       })
     },
@@ -187,11 +217,9 @@ export default {
     },
     addNote(note) {
       let newNote = {name: note.name,
-                     note_id: note.note_id,
-                     num: this.selectedNotes.length,
-                     flat: note.flat,
-                     sharp: note.sharp}
+                     note_id: note.note_id}
       this.selectedNotes.push(newNote)
+      console.log(this.selectedNotes);
     },
   }
 }
