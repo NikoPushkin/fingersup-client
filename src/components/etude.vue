@@ -146,6 +146,7 @@ export default {
       maxTempo: 100,
       currentTempo: 80,
       name: '',
+      etude_id: 0,
       notes: [],
       selectedNotes: [],
       info: {'minimum tempo': 'the most convenience tempo to play etude for you',
@@ -163,6 +164,7 @@ export default {
       this.currentTempo = etude.currentTempo
       this.name = etude.name
       this.selectedNotes = etude.notes
+      this.etude_id = etude.etude_id
     }
   },
   methods: {
@@ -178,10 +180,11 @@ export default {
                                   'Content-Type': 'application/json;charset=UTF-8'
                               },
                              body: JSON.stringify({ name: this.name,
-                                                     min_tempo: Number(this.minTempo),
-                                                     max_tempo: Number(this.maxTempo),
-                                                     current_tempo: Number(this.currentTempo),
-                                                     notes: this.selectedNotes
+                                                    uid: this.etude_id,
+                                                    min_tempo: Number(this.minTempo),
+                                                    max_tempo: Number(this.maxTempo),
+                                                    current_tempo: Number(this.currentTempo),
+                                                    notes: this.selectedNotes,
                                                    })})
       console.log(resp);
     },
