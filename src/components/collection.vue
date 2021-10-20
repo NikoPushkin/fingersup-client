@@ -49,7 +49,8 @@
                                      maxTempo: etude.tempo_max,
                                      currentTempo: etude.tempo_current,
                                      name: etude.name,
-                                     notes: etude.notes
+                                     notes: etude.notes,
+                                     etude_id: etude.etude_id
                                    }
                                   }
                                 }"
@@ -87,6 +88,7 @@ export default {
       this.etudeList = await resp.json();
     },
     async deleteEtude(id, name) {
+      console.log(id, name);
       let resp = await fetch(environment.url + 'etude/delete/' + id, {
                               method: 'DELETE'
                             });
