@@ -1,6 +1,11 @@
 <template>
   <b-container class="etude-container" style="max-width: 400px">
-    <b-card>
+    <Result :etudeName="createdEtude"
+            :action="action"
+            :redirectPath="redirectPath"
+            v-if="createdEtude"/>
+
+    <b-card v-else>
       <b-row class="mb-2">
         <b-col class="text-left" sm="12"><p class="text-item">Etude {{ msg }}</p></b-col>
       </b-row>
@@ -131,9 +136,13 @@
 <script>
 
 import { environment } from '../environment';
+import Result from '@/components/result.vue'
 
 export default {
   name: 'Etude',
+  components: {
+    Result
+  },
   props: {
     msg: {
       type: String,
@@ -151,7 +160,10 @@ export default {
       selectedNotes: [],
       info: {'minimum tempo': 'the most convenience tempo to play etude for you',
              'current tempo': 'int - tempo you currently practice',
-             'goal tempo': 'tempo you want to reach'}
+             'goal tempo': 'tempo you want to reach'},
+      createdEtude: '',
+      action: 'created',
+      redirectPath: ''
     }
   },
   created() {
@@ -169,9 +181,13 @@ export default {
   },
   methods: {
     async createUpdateEtude(method) {
+      this.createdEtude = ''
       let route = 'etude/create'
+      this.redirectPath = '/etude/create'
       if (method == 'POST') {
         route = 'etude/update'
+        this.action = 'updated'
+        this.redirectPath = '/etude/collection'
       }
       let resp = await fetch(environment.url + route,
                              {method: method,
@@ -186,6 +202,12 @@ export default {
                                                     current_tempo: Number(this.currentTempo),
                                                     notes: this.selectedNotes,
                                                    })})
+
+      let data = await resp.json()
+
+      if (data.length) {
+        this.createdEtude = this.name;
+      }
       console.log(resp);
     },
 

@@ -11,17 +11,10 @@
       </b-card-header>
 
       <b-collapse :id="'etude-' + index" accordion="my-accordion" role="tabpanel">
-        <b-card-body v-if="deletedEtude">
 
-        <b-alert show variant="info"
-          >
-          Etude <b>{{ deletedEtude }}</b> removed
-          <div class="">
-            <b-button variant="info" @click="cleareDeletedEtude">Ok</b-button>
-          </div>
-        </b-alert>
-
-        </b-card-body>
+        <Result etudeName="deletedEtude"
+                action="'removed'"
+                v-if="deletedEtude"/>
 
         <b-card-body v-else>
           <b-card-text>Min tempo: <code>{{ etude.tempo_min }}</code></b-card-text>
@@ -70,9 +63,13 @@
 
 <script>
 import { environment } from '../environment';
+import Result from '@/components/result.vue'
 
 export default {
   name: 'Collection',
+  components: {
+    Result
+  },
   data() {
     return {
       etudeList: [],
@@ -84,21 +81,21 @@ export default {
   },
   methods: {
     async getEtudeCollection() {
+      this.deletedEtude = '';
       let resp = await fetch(environment.url + 'etude/full');
       this.etudeList = await resp.json();
     },
     async deleteEtude(id, name) {
-      console.log(id, name);
       let resp = await fetch(environment.url + 'etude/delete/' + id, {
                               method: 'DELETE'
                             });
       let data = await resp.json();
+
       if (data.length) {
         this.deletedEtude = name;
       }
     },
     cleareDeletedEtude() {
-      this.deletedEtude = '';
       this.getEtudeCollection();
     },
 
